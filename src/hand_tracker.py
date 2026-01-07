@@ -16,7 +16,7 @@ class HandTracker:
 
         self.detector = vision.HandLandmarker.create_from_options(options)
 
-    def detect_and_draw(self, frame):
+    def detect(self, frame):
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         mp_image = mp.Image(
@@ -25,13 +25,11 @@ class HandTracker:
         )
 
         result = self.detector.detect(mp_image)
+        return result
 
-        if result.hand_landmarks:
-            h, w, _ = frame.shape
-            for hand_landmarks in result.hand_landmarks:
-                for landmark in hand_landmarks:
-                    x = int(landmark.x * w)
-                    y = int(landmark.y * h)
-                    cv2.circle(frame, (x, y), 5, (0, 255, 0), -1)
-
-        return frame
+    def draw_landmarks(self, frame, hand_landmarks):
+        h, w, _ = frame.shape
+        for landmark in hand_landmarks:
+            x = int(landmark.x * w)
+            y = int(landmark.y * h)
+            cv2.circle(frame, (x, y), 5, (0, 255, 0), -1)

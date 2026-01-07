@@ -1,6 +1,7 @@
 import cv2
 from camera import Camera
 from hand_tracker import HandTracker
+from gesture_utils import get_finger_states
 
 def main():
     cam = Camera()
@@ -11,11 +12,18 @@ def main():
         if frame is None:
             break
 
-        frame = tracker.detect_and_draw(frame)
+        result = tracker.detect(frame)
 
-        cv2.imshow("Gesture Controlled Media Player - Day 1", frame)
+        if result.hand_landmarks:
+            hand_landmarks = result.hand_landmarks[0]
+            tracker.draw_landmarks(frame, hand_landmarks)
 
-        if cv2.waitKey(1) & 0xFF == 27:  # ESC
+            fingers = get_finger_states(hand_landmarks)
+            print(fingers)
+
+        cv2.imshow("Gesture Media Player - Day 2", frame)
+
+        if cv2.waitKey(1) & 0xFF == 27:
             break
 
     cam.release()
