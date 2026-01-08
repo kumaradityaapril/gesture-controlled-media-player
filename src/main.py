@@ -6,11 +6,13 @@ from gesture_utils import (
     classify_gesture,
     SwipeDetector
 )
+from media_controller import MediaController
 
 def main():
     cam = Camera()
     tracker = HandTracker()
     swipe_detector = SwipeDetector()
+    media = MediaController()
 
     current_gesture = ""
 
@@ -32,6 +34,17 @@ def main():
             # Swipe gesture
             frame_width = frame.shape[1]
             swipe = swipe_detector.detect_swipe(hand_landmarks, frame_width)
+
+            if swipe == "SWIPE_RIGHT":
+                media.next_track()
+            elif swipe == "SWIPE_LEFT":
+                media.previous_track()
+            elif static_gesture == "OPEN_PALM":
+                media.play_pause()
+            elif static_gesture == "THUMB_UP":
+                media.volume_up()
+            elif static_gesture == "THUMB_DOWN":
+                media.volume_down()
 
             if swipe:
                 current_gesture = swipe
