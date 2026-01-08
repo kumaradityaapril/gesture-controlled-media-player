@@ -1,11 +1,18 @@
 import cv2
 from camera import Camera
 from hand_tracker import HandTracker
-from gesture_utils import get_finger_states, classify_gesture
+from gesture_utils import (
+    get_finger_states,
+    classify_gesture,
+    SwipeDetector
+)
 
 def main():
     cam = Camera()
     tracker = HandTracker()
+    swipe_detector = SwipeDetector()
+
+    current_gesture = ""
 
     while True:
         frame = cam.get_frame()
@@ -18,12 +25,22 @@ def main():
             hand_landmarks = result.hand_landmarks[0]
             tracker.draw_landmarks(frame, hand_landmarks)
 
+            # Static gesture
             fingers = get_finger_states(hand_landmarks)
-            gesture = classify_gesture(fingers, hand_landmarks)
+            static_gesture = classify_gesture(fingers, hand_landmarks)
+
+            # Swipe gesture
+            frame_width = frame.shape[1]
+            swipe = swipe_detector.detect_swipe(hand_landmarks, frame_width)
+
+            if swipe:
+                current_gesture = swipe
+            else:
+                current_gesture = static_gesture
 
             cv2.putText(
                 frame,
-                f"Gesture: {gesture}",
+                f"Gesture: {current_gesture}",
                 (30, 50),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1,
@@ -31,7 +48,7 @@ def main():
                 2
             )
 
-        cv2.imshow("Gesture Media Player - Day 3", frame)
+        cv2.imshow("Gesture Media Player - Day 4", frame)
 
         if cv2.waitKey(1) & 0xFF == 27:
             break

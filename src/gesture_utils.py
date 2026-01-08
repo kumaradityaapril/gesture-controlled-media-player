@@ -1,3 +1,6 @@
+import time
+from collections import deque
+
 def get_finger_states(landmarks):
     """
     Returns a dictionary showing which fingers are open.
@@ -19,24 +22,63 @@ def classify_gesture(fingers, landmarks):
     Classifies static hand gestures based on finger states.
     """
 
-    # ✊ Fist (all fingers closed)
-    if not any(fingers.values()):
+    # Count open fingers
+    open_finger_count = sum(fingers.values())
+
+    # ✊ Fist (no fingers open)
+    if open_finger_count == 0:
         return "FIST"
 
-    # ✋ Open Palm (all fingers open)
-    if all(fingers.values()):
+    # ✋ Open Palm (4 or more fingers open)
+    if open_finger_count >= 4:
         return "OPEN_PALM"
 
-    # 👍 Thumb Up
-    if fingers["thumb"] and not fingers["index"] and not fingers["middle"] \
-       and not fingers["ring"] and not fingers["pinky"]:
+    # 👍 Thumb Up (only thumb open + direction)
+    if fingers["thumb"] and open_finger_count == 1:
         if landmarks[4].y < landmarks[2].y:
             return "THUMB_UP"
 
     # 👎 Thumb Down
-    if fingers["thumb"] and not fingers["index"] and not fingers["middle"] \
-       and not fingers["ring"] and not fingers["pinky"]:
+    if fingers["thumb"] and open_finger_count == 1:
         if landmarks[4].y > landmarks[2].y:
             return "THUMB_DOWN"
 
     return "UNKNOWN"
+
+class SwipeDetector:
+    def __init__(self, threshold=150, cooldown=1.0):
+        self.threshold = threshold          # pixels
+        self.cooldown = cooldown
+        self.positions = deque(maxlen=10)   # last 10 frames
+        self.last_swipe_time = 0
+
+    def detect_swipe(self, landmarks, frame_width):
+        current_time = time.time()
+
+        # Cooldown check
+        if current_time - self.last_swipe_time < self.cooldown:
+            return None
+
+        # Wrist landmark (0)
+        wrist_x = int(landmarks[0].x * frame_width)
+        self.positions.append(wrist_x)
+
+        # Need enough history
+        if len(self.positions) < self.positions.maxlen:
+            return None
+
+        movement = self.positions[-1] - self.positions[0]
+
+        # Swipe Right
+        if movement > self.threshold:
+            self.positions.clear()
+            self.last_swipe_time = current_time
+            return "SWIPE_RIGHT"
+
+        # Swipe Left
+        if movement < -self.threshold:
+            self.positions.clear()
+            self.last_swipe_time = current_time
+            return "SWIPE_LEFT"
+
+        return None
