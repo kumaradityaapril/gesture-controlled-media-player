@@ -6,7 +6,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
 ![Status](https://img.shields.io/badge/Status-Completed-success.svg)
 
-A **real-time gesture-controlled media player** that allows users to control system media
+A **real-time gesture-controlled media player** that allows users to control system media  
 (play/pause, volume, next/previous track) using **hand gestures captured via webcam**.
 
 This project demonstrates **computer vision, real-time processing, gesture recognition, and OS-level automation** using Python.
@@ -26,69 +26,60 @@ This project demonstrates **computer vision, real-time processing, gesture recog
 
 ---
 
-## 🎥 Demo
+## 🧠 System Workflow
 
-> 📌 *Add a demo video or GIF here*
-
-**Recommended:**
-- Record a short screen + webcam video
-- Convert to GIF (using ScreenToGif / OBS)
-
-Example:
-```md
-![Demo](demo.gif)
-🧠 System Workflow
-mathematica
-Copy code
 Webcam Feed
-   ↓
+->
 OpenCV Frame Processing
-   ↓
+->
 MediaPipe Tasks API (21 Hand Landmarks)
-   ↓
+->
 Finger State Detection
-   ↓
+->
 Static & Dynamic Gesture Classification
-   ↓
+->
 Gesture Stabilization (N-frame window)
-   ↓
+->
 Media Control via PyAutoGUI
-🏗️ Project Architecture
-graphql
-Copy code
+
+---
+
+## Project Architecture
 gesture-controlled-media-player/
-│
 ├── models/
-│   └── hand_landmarker.task
+│ └── hand_landmarker.task # MediaPipe hand landmark model
 │
 ├── src/
-│   ├── camera.py              # Webcam handling (OpenCV)
-│   ├── hand_tracker.py        # Hand landmark detection (MediaPipe)
-│   ├── gesture_utils.py       # Gesture logic, swipe detection, stability
-│   ├── media_controller.py    # OS-level media automation
-│   └── main.py                # Application entry point
+│ ├── camera.py # Webcam handling (OpenCV)
+│ ├── hand_tracker.py # Hand landmark detection (MediaPipe)
+│ ├── gesture_utils.py # Gesture logic, swipe detection, stability
+│ ├── media_controller.py # OS-level media automation
+│ └── main.py # Application entry point
 │
-├── requirements.txt
-├── README.md
-└── venv/
-⚙️ Installation & Setup
-1️⃣ Clone Repository
-bash
-Copy code
+├── requirements.txt # Project dependencies
+├── README.md # Project documentation
+└── venv/ # Virtual environment (ignored in Git)
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone Repository
+
 git clone <your-repo-url>
 cd gesture-controlled-media-player
+
 2️⃣ Create & Activate Virtual Environment
-bash
-Copy code
+
 python -m venv venv
 venv\Scripts\activate   # Windows
+
 3️⃣ Install Dependencies
-bash
-Copy code
+
 pip install -r requirements.txt
+
 4️⃣ Run Application
-bash
-Copy code
+
 python src/main.py
 🧪 Supported Gestures
 Gesture	Action
@@ -98,14 +89,18 @@ Thumb Down	Volume Down
 Swipe Right	Next Track
 Swipe Left	Previous Track
 
+---
+
 📈 Performance & Stability
-Real-time hand tracking with MediaPipe Tasks API
+Real-time hand tracking using MediaPipe Tasks API
 
 FPS counter for performance monitoring
 
 Gesture stabilization using sliding window (N-frame confirmation)
 
 Cooldown & debounce logic to prevent accidental triggers
+
+---
 
 🧠 Technical Highlights (Resume Keywords)
 Computer Vision
@@ -126,6 +121,8 @@ Performance Optimization
 
 Modular Python Design
 
+---
+
 📌 Future Enhancements
 Gesture-controlled virtual mouse
 
@@ -135,7 +132,7 @@ Custom gesture training using ML models
 
 Cross-platform support (Linux/macOS)
 
-👨‍💻 Author
-Kumar Aditya
+# 👨‍💻 Author
+## Kumar Aditya
 📌 Aspiring Software / Full Stack / Computer Vision Developer
 
