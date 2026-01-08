@@ -1,7 +1,7 @@
 import cv2
 from camera import Camera
 from hand_tracker import HandTracker
-from gesture_utils import get_finger_states
+from gesture_utils import get_finger_states, classify_gesture
 
 def main():
     cam = Camera()
@@ -19,9 +19,19 @@ def main():
             tracker.draw_landmarks(frame, hand_landmarks)
 
             fingers = get_finger_states(hand_landmarks)
-            print(fingers)
+            gesture = classify_gesture(fingers, hand_landmarks)
 
-        cv2.imshow("Gesture Media Player - Day 2", frame)
+            cv2.putText(
+                frame,
+                f"Gesture: {gesture}",
+                (30, 50),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (0, 255, 0),
+                2
+            )
+
+        cv2.imshow("Gesture Media Player - Day 3", frame)
 
         if cv2.waitKey(1) & 0xFF == 27:
             break
